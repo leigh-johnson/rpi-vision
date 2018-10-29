@@ -29,6 +29,7 @@ nbconvert==5.4.0
 nbformat==4.4.0
 notebook==5.7.0
 numpy==1.14.5
+pandas==0.23.4
 pandocfilters==1.4.2
 parso==0.3.1
 pexpect==4.6.0
@@ -40,12 +41,15 @@ protobuf==3.6.1
 ptyprocess==0.6.0
 Pygments==2.2.0
 python-dateutil==2.7.5
+pytz==2018.6
 PyYAML==3.13
 pyzmq==17.1.2
 qtconsole==4.4.2
+scikit-learn==0.20.0
 scipy==1.1.0
 Send2Trash==1.5.0
 six==1.11.0
+sklearn==0.0
 tensorboard==1.10.0
 tensorflow==1.10.1
 termcolor==1.1.0
