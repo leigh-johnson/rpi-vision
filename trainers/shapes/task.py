@@ -38,7 +38,7 @@ if __name__ == "__main__":
     model = models.Sequential()
     model.add(conv_base)
     model.add(layers.Flatten())
-    model.add(layers.Dense(640, activation="relu"))
+    model.add(layers.Dense(640, activation="relu", input_dim=(7 * 7 * 1280)))
     model.add(layers.Dense(1, activation="sigmoid"))
 
     # initialize image data generators
@@ -101,9 +101,7 @@ if __name__ == "__main__":
     )
 
     model.compile(
-        loss="binary_crossentropy",
-        optimizer=optimizers.Adam(),
-        metrics=["binary_accuracy"],  # accuracy
+        loss="binary_crossentropy", optimizer=optimizers.Adam(), metrics="accuracy"
     )
 
     time_callback = TimeHistory()
