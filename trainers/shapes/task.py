@@ -38,7 +38,7 @@ if __name__ == "__main__":
     model = models.Sequential()
     model.add(conv_base)
     model.add(layers.Flatten())
-    model.add(layers.Dense(256, activation="relu"))
+    model.add(layers.Dense(640, activation="relu"))
     model.add(layers.Dense(1, activation="sigmoid"))
 
     # initialize image data generators
@@ -48,10 +48,10 @@ if __name__ == "__main__":
         rescale=1.0
         / 255,  # rescale to target values between 0 and 255 (default between 0 and 1)
         rotation_range=40,  # train on variations rotated up to 40 degrees
-        width_shift_range=0.9,  # train using variations off-center on x-axis by factor of 0.9
-        height_shift_range=0.9,  # train using variations off-center on y-axis by a factor of 0.9
+        width_shift_range=0.2,  # train using variations off-center on x-axis by factor of 0.2
+        height_shift_range=0.2,  # train using variations off-center on y-axis by a factor of 0.2
         shear_range=0.2,  # train using variations sheared/warped by a factor of 0.2
-        zoom_range=0.9,  # train using variations zoomed by a factor of 0.9
+        zoom_range=0.2,  # train using variations zoomed by a factor of 0.2
         horizontal_flip=True,  # x-axis flip
         vertical_flip=True,  # y-axis flip
     )
@@ -101,10 +101,11 @@ if __name__ == "__main__":
     )
 
     model.compile(
-        loss="binary_crossentropy",
-        optimizer=optimizers.RMSprop(lr=2e-5),  # what is this?
-        metrics=["acc"],  # accuracy
+        loss='binary_crossentropy',
+        optimizer=optimizers.Adam()
+        metrics=['binary_accuracy'] # accuracy
     )
+
 
     time_callback = TimeHistory()
 
