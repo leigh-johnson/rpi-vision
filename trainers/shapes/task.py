@@ -119,6 +119,6 @@ if __name__ == "__main__":
     storage_client = storage.Client()
     bucket = storage_client.get_bucket("raspberry-pi-vision")
     blob = bucket.blob(
-        "shapes/models/{0}_{1}".format((trainers.__version__, datetime.utcnow()))
+        "shapes/models/{0}_{1}".format(trainers.__version__, datetime.utcnow())
     )
     blob.upload_from_filename(filename="./shapes_model.h5")
