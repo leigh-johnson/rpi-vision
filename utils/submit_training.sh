@@ -10,13 +10,26 @@ echo "Enter next release tag: "
 read RELEASE_TAG
 
 # create git tag
-git tag ${RELEASE_TAG}
+if [ $(git tag -l "$RELEASE_TAG") ]; then
+    read -r -p "WARNING ${RELEASE_TAG} already exists. Overwrite? [y/N] " OVERWRITE_RES
+    case "$OVERWRITE_RES" in
+        [yY][eE][sS]|[yY]) 
+            git tag -d ${RELEASE_TAG}
+            git tag ${RELEASE_TAG}
+            ;;
+        *)
+            exit 1
+            ;;
+    esac
+
+else
+  git tag ${RELEASE_TAG}
+fi
 
 echo "__version__ = '${RELEASE_TAG}'" > $TRAINER_PACKAGE_PATH/__init__.py
 
 now=$(date +"%Y%m%d_%H%M%S") 
-JOB_NAME="rpivision_${RELEASE_TAG}_${now}"
-JOB_ID="rpivision_${RELEASE_TAG}_${now}"
+JOB_NAME="rpivision_${now}"
 
 gcloud ml-engine jobs submit training $JOB_NAME \
     --staging-bucket $PACKAGE_STAGING_PATH \
