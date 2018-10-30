@@ -101,7 +101,7 @@ if __name__ == "__main__":
     )
 
     model.compile(
-        loss="binary_crossentropy", optimizer=optimizers.Adam(), metrics="accuracy"
+        loss="binary_crossentropy", optimizer=optimizers.Adam(), metrics=["accuracy"]
     )
 
     time_callback = TimeHistory()
