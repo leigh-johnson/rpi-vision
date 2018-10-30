@@ -111,10 +111,8 @@ if __name__ == "__main__":
     # https://stackoverflow.com/questions/43178668/record-the-computation-time-for-each-epoch-in-keras-during-model-fit
     history = model.fit_generator(
         train_generator,
-        steps_per_epoch=100,
-        epochs=30,
+        epochs=10,
         validation_data=validation_generator,
-        validation_steps=50,
         callbacks=[time_callback],
     )
 
