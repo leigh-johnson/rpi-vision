@@ -1,6 +1,8 @@
 from setuptools import find_packages
 from setuptools import setup
 
+from trainers import shapes
+
 
 REQUIRED_PACKAGES = [
     "absl-py==0.6.1",
@@ -75,7 +77,7 @@ REQUIRED_PACKAGES = [
 
 setup(
     name="rpivision",
-    version="0.0.1",
+    version=shapes.__version__,
     install_requires=REQUIRED_PACKAGES,
     packages=find_packages(),
     include_package_data=True,

@@ -8,7 +8,7 @@ import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from google.cloud import storage
-
+from trainers import __version__
 
 DATA_PATH = os.path.dirname(os.path.realpath(__file__)) + "/data/"
 
@@ -121,5 +121,5 @@ if __name__ == "__main__":
 
     storage_client = storage.Client()
     bucket = storage_client.get_bucket("raspberry-pi-vision")
-    blob = bucket.blob("shapes/models/{0}".format(datetime.utcnow()))
+    blob = bucket.blob("shapes/models/{0}_{1}".format( (__version__, datetime.utcnow() )) )
     blob.upload_from_filename(filename="./shapes_model.h5")
