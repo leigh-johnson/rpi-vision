@@ -117,5 +117,5 @@ history = model.fit_generator(
 )
 
 model.save('./shapes_model.h5')
-blob = bucket.blob('shapes/models/{0}'.format((datetime.utcnow()))
+blob = bucket.blob( 'shapes/models/{0}'.format( datetime.utcnow()  ))
 blob.upload_from_filename(filename='./shapes_model.h5')
