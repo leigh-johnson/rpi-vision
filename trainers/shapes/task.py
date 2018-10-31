@@ -8,6 +8,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from google.cloud import storage
 import trainers
+from trainers.common import TimeHistory
 
 DATA_PATH = os.path.dirname(os.path.realpath(__file__)) + "/data/"
 BATCH_SIZE = 20
@@ -93,7 +94,7 @@ if __name__ == "__main__":
         loss="binary_crossentropy", optimizer=optimizers.Adam(), metrics=["accuracy"]
     )
 
-    time_callback = trainers.common.TimeHistory()
+    time_callback = TimeHistory()
 
     # https://stackoverflow.com/questions/43178668/record-the-computation-time-for-each-epoch-in-keras-during-model-fit
     history = model.fit_generator(

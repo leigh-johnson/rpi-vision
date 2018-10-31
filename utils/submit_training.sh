@@ -32,7 +32,6 @@ else
   git tag ${RELEASE_TAG}
 fi
 
-sed -i "" "s/__version__ = \"*.*\"/__version__ = \"$RELEASE_TAG\"/g" "${TRAINER_PACKAGE_PATH}/__init__.py"
 
 now=$(date +"%Y%m%d_%H%M%S") 
 JOB_NAME="rpivision_${1}_${now}"
@@ -44,6 +43,8 @@ JOB_DIR="gs://raspberry-pi-vision/job-output"
 
 PACKAGE_NAME="rpivision_${1}"
 
+sed -i "" "s/__version__ = \"*.*\"/__version__ = \"$RELEASE_TAG\"/g" "${TRAINER_PACKAGE_PATH}/__init__.py"
+
 gcloud ml-engine jobs submit training $JOB_NAME \
     --staging-bucket $PACKAGE_STAGING_PATH \
     --job-dir $JOB_DIR  \
@@ -53,5 +54,4 @@ gcloud ml-engine jobs submit training $JOB_NAME \
     --python-version 3.5 \
     --runtime-version 1.10 \
     -- \
-    --REMOTE=True \
-    --PACKAGE_NAME=PACKAGE_NAME
+    --PACKAGE_NAME PACKAGE_NAME
