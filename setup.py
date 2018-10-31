@@ -1,6 +1,6 @@
 from setuptools import find_packages
 from setuptools import setup
-
+import os
 import trainers
 
 
@@ -75,8 +75,10 @@ REQUIRED_PACKAGES = [
     "webencodings==0.5.1",
 ]
 
+PACKAGE_NAME = os.environ.get("PACKAGE_NAME", "rpivision")
+
 setup(
-    name="rpivision",
+    name=PACKAGE_NAME,
     version=trainers.__version__,
     install_requires=REQUIRED_PACKAGES,
     packages=find_packages(),
