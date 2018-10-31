@@ -52,7 +52,7 @@ gcloud ml-engine jobs submit training $JOB_NAME \
     --module-name $MAIN_TRAINER_MODULE \
     --region $REGION \
     --python-version 3.5 \
-    --runtime-version 1.9 \
-    --scale-tier BASIC_TPU
+    --runtime-version 1.10 \
+    --scale-tier BASIC_GPU \
     -- \
     --PACKAGE_NAME PACKAGE_NAME
