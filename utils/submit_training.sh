@@ -36,7 +36,7 @@ fi
 now=$(date +"%Y%m%d_%H%M%S") 
 JOB_NAME="rpivision_${1}_${now}"
 TRAINER_PACKAGE_PATH="${HOME}/projects/raspberry-pi-vision/trainers/"
-REGION="us-west1"
+REGION="us-central1"
 MAIN_TRAINER_MODULE="trainers.${1}.task"
 PACKAGE_STAGING_PATH="gs://raspberry-pi-vision-builds"
 JOB_DIR="gs://raspberry-pi-vision/job-output"
@@ -52,6 +52,7 @@ gcloud ml-engine jobs submit training $JOB_NAME \
     --module-name $MAIN_TRAINER_MODULE \
     --region $REGION \
     --python-version 3.5 \
-    --runtime-version 1.10 \
+    --runtime-version 1.9 \
+    --scale-tier BASIC_TPU
     -- \
     --PACKAGE_NAME PACKAGE_NAME

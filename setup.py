@@ -63,8 +63,6 @@ REQUIRED_PACKAGES = [
     "Send2Trash==1.5.0",
     "six==1.11.0",
     "sklearn==0.0",
-    "tensorboard==1.10.0",
-    "tensorflow==1.10.1",
     "termcolor==1.1.0",
     "terminado==0.8.1",
     "testpath==0.4.2",
