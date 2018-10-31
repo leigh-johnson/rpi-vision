@@ -50,7 +50,7 @@ def main():
             file.retrieve(REMOTE_DATA_PATH, file_path)
         print("Extracting {0}".format(file_path))
         tar = tarfile.open(file_path)
-        tar.extractall()
+        tar.extractall(MODULE_PATH)
         tar.close()
 
     model = Sequential()
