@@ -4,7 +4,6 @@ from datetime import datetime
 import argparse
 import tarfile
 import urllib
-import sys
 
 # lib
 from keras.preprocessing.image import ImageDataGenerator
@@ -46,12 +45,12 @@ def main():
     if not os.path.isdir(LOCAL_DATA_PATH):
         file_path = MODULE_PATH + "/data.tar.gz"
         if not os.path.isfile(file_path):
-            sys.stdout.write("Downloading {0}".format(REMOTE_DATA_PATH))
+            print("Downloading {0}".format(REMOTE_DATA_PATH))
             file = urllib.request.URLopener()
             file.retrieve(REMOTE_DATA_PATH, file_path)
-        sys.stdout.write("Extracting {0}".format(file_path))
+        print("Extracting {0}".format(file_path))
         tar = tarfile.open(file_path)
-        tar.extractall(path=MODULE_PATH)
+        tar.extractall()
         tar.close()
 
     model = Sequential()
