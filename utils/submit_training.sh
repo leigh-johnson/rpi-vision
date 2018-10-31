@@ -38,7 +38,7 @@ sed -i "" "s/__version__ = \"*.*\"/__version__ = \"$RELEASE_TAG\"/g" "${TRAINER_
 now=$(date +"%Y%m%d_%H%M%S") 
 JOB_NAME="rpivision_${1}_${now}"
 TRAINER_PACKAGE_PATH="${HOME}/projects/raspberry-pi-vision/trainers/"
-REGION="us-west2"
+REGION="us-west1"
 MAIN_TRAINER_MODULE="trainers.${1}.task"
 PACKAGE_STAGING_PATH="gs://raspberry-pi-vision-builds"
 JOB_DIR="gs://raspberry-pi-vision/job-output"
