@@ -26,7 +26,7 @@ else
   git tag ${RELEASE_TAG}
 fi
 
-echo "__version__ = '${RELEASE_TAG}'" > $TRAINER_PACKAGE_PATH/__init__.py
+sed -i "s/__version__ = '*.*'/__version__ = '${RELEASE_TAG}/g" $TRAINER_PACKAGE_PATH/__init__.py
 
 now=$(date +"%Y%m%d_%H%M%S") 
 JOB_NAME="rpivision_${now}"
@@ -38,4 +38,6 @@ gcloud ml-engine jobs submit training $JOB_NAME \
     --module-name $MAIN_TRAINER_MODULE \
     --region $REGION \
     --python-version 3.5 \
-    --runtime-version 1.10
+    --runtime-version 1.10 \
+    --
+    --REMOTE
