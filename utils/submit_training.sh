@@ -43,7 +43,7 @@ JOB_DIR="gs://raspberry-pi-vision/job-output"
 
 PACKAGE_NAME="rpivision_${1}"
 
-sed -i "" "s/__version__ = \"*.*\"/__version__ = \"$RELEASE_TAG\"/g" "${TRAINER_PACKAGE_PATH}/__init__.py"
+sed -i "" "s/__version__ = \"*.*\"/__version__ = \"$RELEASE_TAG\"/g" "$TRAINER_PACKAGE_PATH/__init__.py"
 
 gcloud ml-engine jobs submit training $JOB_NAME \
     --staging-bucket $PACKAGE_STAGING_PATH \

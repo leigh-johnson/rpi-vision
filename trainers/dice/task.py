@@ -35,7 +35,6 @@ else:
 
 def main():
 
-    UPLAOD_PATH = "gs://raspberry-pi-vision/dice/data/"
     REMOTE_DATA_PATH = (
         "https://storage.googleapis.com/raspberry-pi-vision/dice/data.tar.gz"
     )
