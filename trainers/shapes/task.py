@@ -1,7 +1,6 @@
 from keras.applications.mobilenetv2 import MobileNetV2
 from keras import models, layers, optimizers
 from keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import Callback
 from datetime import datetime
 import time
 import os
@@ -94,7 +93,7 @@ if __name__ == "__main__":
         loss="binary_crossentropy", optimizer=optimizers.Adam(), metrics=["accuracy"]
     )
 
-    time_callback = trainers.TimeHistory()
+    time_callback = trainers.common.TimeHistory()
 
     # https://stackoverflow.com/questions/43178668/record-the-computation-time-for-each-epoch-in-keras-during-model-fit
     history = model.fit_generator(

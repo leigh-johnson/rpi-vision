@@ -90,12 +90,15 @@ if __name__ == "__main__":
         class_mode="binary",
     )
 
+    time_callback = trainers.common.TimeHistory()
+
     model.fit_generator(
         train_generator,
         steps_per_epoch=NUM_TRAIN_SAMPLES // BATCH_SIZE,
         epochs=50,
         validation_data=validation_generator,
         validation_steps=NUM_VALIDATION_SAMPLES // BATCH_SIZE,
+        callbacks=[time_callback],
     )
 
     model.save_weights(LOCAL_DATA_PATH + "weights_" + trainers.__version__ + ".h5")

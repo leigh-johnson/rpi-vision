@@ -33,14 +33,14 @@ else
   git tag ${RELEASE_TAG}
 fi
 
-sed -i "s/__version__ = '*.*'/__version__ = '${RELEASE_TAG}/g" $TRAINER_PACKAGE_PATH/__init__.py
+sed -i "" "s/__version__ = \"*.*\"/__version__ = \"$RELEASE_TAG\"/g" "${TRAINER_PACKAGE_PATH}/__init__.py"
 
 now=$(date +"%Y%m%d_%H%M%S") 
 JOB_NAME="rpivision_${1}_${now}"
 TRAINER_PACKAGE_PATH="${HOME}/projects/raspberry-pi-vision/trainers/"
 REGION="us-west2"
 MAIN_TRAINER_MODULE="trainers.${1}.task"
-PACKAGE_STAGING_PATH="gs://raspberry-pi-vision-build"
+PACKAGE_STAGING_PATH="gs://raspberry-pi-vision-builds"
 JOB_DIR="gs://raspberry-pi-vision/job-output"
 PACKAGE_NAME="rpivision_${1}"
 
@@ -52,5 +52,5 @@ gcloud ml-engine jobs submit training $JOB_NAME \
     --region $REGION \
     --python-version 3.5 \
     --runtime-version 1.10 \
-    --
-    --REMOTE
+    -- \
+    --REMOTE=True
