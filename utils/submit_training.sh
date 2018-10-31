@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-$1
-
 if [ -z "$1" ]
   then
     echo "please specify a training package [shapes, dice]"
+    exit 1
 fi
 
 # bump version
@@ -42,6 +41,7 @@ REGION="us-west1"
 MAIN_TRAINER_MODULE="trainers.${1}.task"
 PACKAGE_STAGING_PATH="gs://raspberry-pi-vision-builds"
 JOB_DIR="gs://raspberry-pi-vision/job-output"
+
 PACKAGE_NAME="rpivision_${1}"
 
 gcloud ml-engine jobs submit training $JOB_NAME \
@@ -53,4 +53,5 @@ gcloud ml-engine jobs submit training $JOB_NAME \
     --python-version 3.5 \
     --runtime-version 1.10 \
     -- \
-    --REMOTE=True
+    --REMOTE=True \
+    --PACKAGE_NAME=PACKAGE_NAME

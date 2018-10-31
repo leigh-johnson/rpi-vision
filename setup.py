@@ -75,7 +75,10 @@ REQUIRED_PACKAGES = [
     "webencodings==0.5.1",
 ]
 
-PACKAGE_NAME = os.environ.get("PACKAGE_NAME", "rpivision")
+try:
+    PACKAGE_NAME
+except NameError:
+    PACKAGE_NAME = "rpivision"
 
 setup(
     name=PACKAGE_NAME,
