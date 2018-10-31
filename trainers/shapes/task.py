@@ -11,17 +11,7 @@ from google.cloud import storage
 import trainers
 
 DATA_PATH = os.path.dirname(os.path.realpath(__file__)) + "/data/"
-
-
-class TimeHistory(Callback):
-    def on_train_begin(self, logs={}):
-        self.times = []
-
-    def on_epoch_begin(self, batch, logs={}):
-        self.epoch_time_start = time.time()
-
-    def on_epoch_end(self, batch, logs={}):
-        self.times.append(time.time() - self.epoch_time_start)
+BATCH_SIZE = 20
 
 
 if __name__ == "__main__":
@@ -84,7 +74,7 @@ if __name__ == "__main__":
     train_generator = train_datagen.flow_from_dataframe(
         dataframe=train_df,
         directory=DATA_PATH,
-        batch_size=len(train_df),
+        batch_size=BATCH_SIZE,
         class_mode="binary",  # use binary labels for binary_crossentropy loss calculations
         target_size=(224, 224),
         y_col="label",
@@ -93,7 +83,7 @@ if __name__ == "__main__":
     validation_generator = test_datagen.flow_from_dataframe(
         dataframe=validation_df,
         directory=DATA_PATH,
-        batch_size=len(validation_df),
+        batch_size=BATCH_SIZE,
         class_mode="binary",  # use binary labels for binary_crossentropy loss calculations
         target_size=(224, 224),
         y_col="label",
@@ -104,7 +94,7 @@ if __name__ == "__main__":
         loss="binary_crossentropy", optimizer=optimizers.Adam(), metrics=["accuracy"]
     )
 
-    time_callback = TimeHistory()
+    time_callback = trainers.TimeHistory()
 
     # https://stackoverflow.com/questions/43178668/record-the-computation-time-for-each-epoch-in-keras-during-model-fit
     history = model.fit_generator(
