@@ -8,6 +8,7 @@ from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
 from keras import backend as K
+from google.cloud import storage
 import trainers
 
 # inspired by https://gist.github.com/fchollet/0830affa1f7f19fd47b06d4cf89ed44d
@@ -25,10 +26,10 @@ except NameError:
 else:
     REMOTE = True
 
-if REMOTE:
-    DATA_PATH = "gs://raspberry-pi-vision/dice/data/"
-else:
-    DATA_PATH = os.path.dirname(os.path.realpath(__file__)) + "/data/"
+REMOTE_DATA_PATH = "gs://raspberry-pi-vision/dice/data/"
+LOCAL_DATA_PATH = os.path.dirname(os.path.realpath(__file__)) + "/data/"
+
+DATA_PATH = REMOTE_DATA_PATH if REMOTE else LOCAL_DATA_PATH
 
 NUM_TRAIN_SAMPLES = 14290
 NUM_VALIDATION_SAMPLES = 210
@@ -97,8 +98,8 @@ if __name__ == "__main__":
         validation_steps=NUM_VALIDATION_SAMPLES // BATCH_SIZE,
     )
 
-    model.save_weights(DATA_PATH + "weights_" + trainers.__version__ + ".h5")
-    model.save(DATA_PATH + "model_" + trainers.__version__ + ".h5")
+    model.save_weights(LOCAL_DATA_PATH + "weights_" + trainers.__version__ + ".h5")
+    model.save(LOCAL_DATA_PATH + "model_" + trainers.__version__ + ".h5")
 
     if REMOTE:
         storage_client = storage.Client()
