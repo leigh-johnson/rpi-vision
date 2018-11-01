@@ -173,8 +173,8 @@ def main():
 
     model.fit_generator(
         train_generator,
-        steps_per_epoch=1,
-        epochs=1,
+        steps_per_epoch=NUM_VALIDATION_SAMPLES // BATCH_SIZE,
+        epochs=50,
         validation_data=validation_generator,
         validation_steps=NUM_VALIDATION_SAMPLES // BATCH_SIZE,
         callbacks=[time_callback, checkpoint_callback, tensorboard_callback],
