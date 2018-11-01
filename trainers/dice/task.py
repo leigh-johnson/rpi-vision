@@ -4,17 +4,22 @@ from datetime import datetime
 import argparse
 import tarfile
 import urllib
+from time import time
 
 # lib
-from .keras_preprocessing_patch import ImageDataGenerator
+from keras.callbacks import TensorBoard
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
 from keras import backend as K
 from google.cloud import storage
 import trainers
-from trainers.common import TimeHistory
 import pandas as pd
+
+# app
+from trainers.common.keras_preprocessing_patched import ImageDataGenerator
+from trainers.common.callback import TimeHistory, GCSModelCheckpoint, GCSTensorBoard
+
 
 # inspired by https://gist.github.com/fchollet/0830affa1f7f19fd47b06d4cf89ed44d
 
@@ -59,7 +64,10 @@ def compose_dataframe(path, path_suffix):
 
 def main():
 
-    REMOTE_DATA_PATH = (
+    GCS_BUCKET = 'gs://raspberry-pi-vision/dice/'
+    REMOTE_DATA_PATH = "dice/"
+    
+    TRAINING_TARBALL = (
         "https://storage.googleapis.com/raspberry-pi-vision/dice/data.tar.gz"
     )
 
@@ -70,9 +78,9 @@ def main():
     if not os.path.isdir(LOCAL_DATA_PATH):
         file_path = MODULE_PATH + "/data.tar.gz"
         if not os.path.isfile(file_path):
-            print("Downloading {0}".format(REMOTE_DATA_PATH))
+            print("Downloading {0}".format(TRAINING_TARBALL))
             file = urllib.request.URLopener()
-            file.retrieve(REMOTE_DATA_PATH, file_path)
+            file.retrieve(TRAINING_TARBALL, file_path)
         print("Extracting {0}".format(file_path))
         tar = tarfile.open(file_path)
         tar.extractall(MODULE_PATH)
@@ -139,15 +147,37 @@ def main():
         classes=list(set(validation_df["label"])),
     )
 
+    # report step + epoch progress
     time_callback = TimeHistory()
+
+    # checkpoint
+    checkpoint_filepath = (
+        "{0}_weights_".format(trainers.__version__) + "{epoch:02d}-{val_acc:.2f}.hdf5"
+    )
+
+    checkpoint_remotepath = REMOTE_DATA_PATH + "checkpoint/" + checkpoint_filepath
+    checkpoint_callback = GCSModelCheckpoint(
+        checkpoint_filepath,
+        checkpoint_remotepath,
+        bucket="raspberry-pi-vision",
+        monitor="val_acc",
+        verbose=1,
+        save_best_only=True,
+        mode="max",
+    )
+
+    tensorboard_callback = GCSTensorBoard(
+      log_dir="logs/{}_{}".format(trainers.__version__, datetime.utcnow()),
+      remote_log_dir= GCS_BUCKET + "logs/{}".format(trainers.__version__)
+    )
 
     model.fit_generator(
         train_generator,
-        steps_per_epoch=NUM_TRAIN_SAMPLES // BATCH_SIZE,
-        epochs=50,
+        steps_per_epoch=1,
+        epochs=1,
         validation_data=validation_generator,
         validation_steps=NUM_VALIDATION_SAMPLES // BATCH_SIZE,
-        callbacks=[time_callback],
+        callbacks=[time_callback, checkpoint_callback, tensorboard_callback],
     )
 
     model.save_weights(LOCAL_DATA_PATH + "weights_" + trainers.__version__ + ".h5")
@@ -156,14 +186,16 @@ def main():
     storage_client = storage.Client()
     bucket = storage_client.get_bucket("raspberry-pi-vision")
     w_blob = bucket.blob(
-        "dice/models/weights_{0}_{1}".format(trainers.__version__, datetime.utcnow())
+        REMOTE_DATA_PATH
+        + "models/final_weights_{0}_{1}".format(trainers.__version__, datetime.utcnow())
     )
     w_blob.upload_from_filename(
         filename=LOCAL_DATA_PATH + "weights_" + trainers.__version__ + ".h5"
     )
 
     m_blob = bucket.blob(
-        "dice/models/model_{0}_{1}".format(trainers.__version__, datetime.utcnow())
+        REMOTE_DATA_PATH
+        + "models/model_{0}_{1}".format(trainers.__version__, datetime.utcnow())
     )
     m_blob.upload_from_filename(
         filename=LOCAL_DATA_PATH + "model_" + trainers.__version__ + ".h5"
