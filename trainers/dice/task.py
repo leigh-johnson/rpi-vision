@@ -64,9 +64,9 @@ def compose_dataframe(path, path_suffix):
 
 def main():
 
-    GCS_BUCKET = 'gs://raspberry-pi-vision/dice/'
+    GCS_BUCKET = "gs://raspberry-pi-vision/dice/"
     REMOTE_DATA_PATH = "dice/"
-    
+
     TRAINING_TARBALL = (
         "https://storage.googleapis.com/raspberry-pi-vision/dice/data.tar.gz"
     )
@@ -155,7 +155,11 @@ def main():
         "{0}_weights_".format(trainers.__version__) + "{epoch:02d}-{val_acc:.2f}.hdf5"
     )
 
-    checkpoint_remotepath = REMOTE_DATA_PATH + "checkpoint/" + checkpoint_filepath
+    checkpoint_remotepath = (
+        REMOTE_DATA_PATH
+        + "checkpoint/{}/".format(trainers.__version__)
+        + checkpoint_filepath
+    )
     checkpoint_callback = GCSModelCheckpoint(
         checkpoint_filepath,
         checkpoint_remotepath,
@@ -167,8 +171,8 @@ def main():
     )
 
     tensorboard_callback = GCSTensorBoard(
-      log_dir="logs/{}_{}".format(trainers.__version__, datetime.utcnow()),
-      remote_log_dir= GCS_BUCKET + "logs/{}".format(trainers.__version__)
+        log_dir="logs/{}_{}".format(trainers.__version__, datetime.utcnow()),
+        remote_log_dir=GCS_BUCKET + "logs/{}".format(trainers.__version__),
     )
 
     model.fit_generator(
