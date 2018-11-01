@@ -39,7 +39,7 @@ TRAINER_PACKAGE_PATH="${HOME}/projects/raspberry-pi-vision/trainers/"
 REGION="us-central1"
 MAIN_TRAINER_MODULE="trainers.${1}.task"
 PACKAGE_STAGING_PATH="gs://raspberry-pi-vision-builds"
-JOB_DIR="gs://raspberry-pi-vision/job-output"
+JOB_DIR="gs://raspberry-pi-vision/job-output/${1}/${RELEASE_TAG}"
 
 PACKAGE_NAME="rpivision_${1}"
 

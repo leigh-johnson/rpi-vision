@@ -29,8 +29,8 @@ BATCH_SIZE = 16
 IMG_HEIGHT, IMG_WIDTH = 480, 480
 
 
-NUM_TRAIN_SAMPLES = 14290
-NUM_VALIDATION_SAMPLES = 210
+NUM_TRAIN_SAMPLES = 9723
+NUM_VALIDATION_SAMPLES = 1370
 
 if K.image_data_format() == "channels_first":
     input_shape = (3, IMG_WIDTH, IMG_HEIGHT)
@@ -177,7 +177,7 @@ def main():
 
     model.fit_generator(
         train_generator,
-        steps_per_epoch=NUM_VALIDATION_SAMPLES // BATCH_SIZE,
+        steps_per_epoch=NUM_TRAIN_SAMPLES // BATCH_SIZE,
         epochs=50,
         validation_data=validation_generator,
         validation_steps=NUM_VALIDATION_SAMPLES // BATCH_SIZE,
