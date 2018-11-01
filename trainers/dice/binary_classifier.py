@@ -6,7 +6,7 @@ import tarfile
 import urllib
 
 # lib
-from .keras_preprocessing_patch import ImageDataGenerator
+from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
@@ -14,7 +14,6 @@ from keras import backend as K
 from google.cloud import storage
 import trainers
 from trainers.common import TimeHistory
-import pandas as pd
 
 # inspired by https://gist.github.com/fchollet/0830affa1f7f19fd47b06d4cf89ed44d
 
@@ -31,29 +30,6 @@ if K.image_data_format() == "channels_first":
     input_shape = (3, IMG_WIDTH, IMG_HEIGHT)
 else:
     input_shape = (IMG_WIDTH, IMG_HEIGHT, 3)
-
-
-def compose_dataframe(path, path_suffix):
-    # walk through './data/shapes' and load filenames into a dataframe with labels
-    # read from fs
-    label_dirs = next(os.walk(path + path_suffix))[1]
-
-    samples = []
-    for label_path in label_dirs:
-        files = os.listdir(path + path_suffix + "/" + label_path)
-        labels = tuple(label_path.split("_"))
-        samples.append([(file, labels, label_path) for file in files])
-
-    samples = [item for sublist in samples for item in sublist]
-
-    df = pd.DataFrame(
-        [
-            {"label": labels, "filename": label_path + "/" + filename}
-            for (filename, labels, label_path) in samples
-        ]
-    )
-
-    return df
 
 
 def main():
@@ -78,7 +54,6 @@ def main():
         tar.close()
 
     model = Sequential()
-
     model.add(Conv2D(32, (3, 3), input_shape=input_shape))
     model.add(Activation("relu"))
     model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -95,12 +70,10 @@ def main():
     model.add(Dense(64))
     model.add(Activation("relu"))
     model.add(Dropout(0.5))
-    model.add(Dense(17))
-    model.add(Activation("softmax"))
+    model.add(Dense(1))
+    model.add(Activation("sigmoid"))
 
-    model.compile(
-        loss="categorical_crossentropy", optimizer="sgd", metrics=["accuracy"]
-    )
+    model.compile(loss="binary_crossentropy", optimizer="rmsprop", metrics=["accuracy"])
 
     train_datagen = ImageDataGenerator(
         rotation_range=40,
@@ -115,27 +88,18 @@ def main():
 
     test_datagen = ImageDataGenerator(rescale=1.0 / 255)
 
-    train_df = compose_dataframe(LOCAL_DATA_PATH, "train/")
-    validation_df = compose_dataframe(LOCAL_DATA_PATH, "valid/")
-
-    train_generator = train_datagen.flow_from_dataframe(
-        train_df,
+    train_generator = train_datagen.flow_from_directory(
         LOCAL_DATA_PATH + "train/",
         target_size=(IMG_WIDTH, IMG_HEIGHT),
         batch_size=BATCH_SIZE,
-        class_mode="categorical",
-        y_col="label",
-        classes=list(set(train_df["label"])),
+        class_mode="binary",
     )
 
-    validation_generator = test_datagen.flow_from_dataframe(
-        validation_df,
+    validation_generator = test_datagen.flow_from_directory(
         LOCAL_DATA_PATH + "valid/",
         target_size=(IMG_WIDTH, IMG_HEIGHT),
         batch_size=BATCH_SIZE,
-        class_mode="categorical",
-        y_col="label",
-        classes=list(set(validation_df["label"])),
+        class_mode="binary",
     )
 
     time_callback = TimeHistory()
