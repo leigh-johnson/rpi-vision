@@ -104,7 +104,7 @@ def main():
     model.add(Dense(64))
     model.add(Activation("relu"))
     model.add(Dropout(0.5))
-    model.add(Dense(17))
+    model.add(Dense(25))
     model.add(Activation("softmax"))
 
     model.compile(
