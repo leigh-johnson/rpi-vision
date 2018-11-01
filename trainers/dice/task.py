@@ -50,6 +50,7 @@ def compose_dataframe(path, path_suffix):
         [
             {"label": labels, "filename": label_path + "/" + filename}
             for (filename, labels, label_path) in samples
+            if filename.endswith(".jpg") and not filename.startswith("._")
         ]
     )
 
