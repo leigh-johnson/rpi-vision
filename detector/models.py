@@ -5,19 +5,22 @@ import numpy as np
 
 
 
-class MobileNetV2Detector(Object):
+class MobileNetV2Detector(object):
 
     def __init__(
+      self,
       input_size=None
     ):
 
-    self.conv_base = MobileNetV2(
-      weights='imagenet',
-      include_top=True # include the densely connected classifer, which sits on top of hte convolutional network
-    )
+      self.conv_base = MobileNetV2(
+        weights='imagenet',
+        include_top=True, # include the densely connected classifer, which sits on top of hte convolutional network
+        #input_shape=(480, 640, 3)
+      )
+      print(self.conv_base.summary())
 
 
-    def predict(frame):
+    def predict(self, frame):
       # expand 3D RGB frame into 4D "batch"
       sample = np.expand_dims(frame, axis=0)
       processed_sample = preprocess_input(sample.astype(np.float32))
@@ -26,12 +29,13 @@ class MobileNetV2Detector(Object):
       return decoded_features
 
 
-class DiceDetector(Object):
+class DiceDetector(object):
     def __init__(
+      self,
       input_size,
     ):
 
-    self.input_size = input_size
+      self.input_size = input_size
 
 
   

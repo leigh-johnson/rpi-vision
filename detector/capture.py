@@ -1,13 +1,11 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-import cv2
 import numpy as np
 from threading import Thread
 
-cv2.setUseOptimized(True)
 
 
-class PiCameraStream:
+class PiCameraStream(object):
     """
       Continuously capture video frames, and optionally render with an overlay
 
@@ -19,12 +17,13 @@ class PiCameraStream:
 
     """
 
-    def __init__(self, resolution=(320, 240), framerate=24, vflip=False, hflip=False):
+    def __init__(self, resolution=(320, 240), framerate=24, vflip=True, hflip=True):
         self.camera = PiCamera()
         self.camera.resolution = resolution
         self.camera.framerate = framerate
         self.camera.vflip = vflip
         self.camera.hflip = hflip
+        self.camera.rotation = 270
 
         self.data_container = PiRGBArray(self.camera, size=resolution)
 
@@ -34,7 +33,9 @@ class PiCameraStream:
 
         self.frame = None
         self.stopped = False
+        print('starting camera preview')
         self.camera.start_preview()
+
 
     def render_overlay(self):
         pass
