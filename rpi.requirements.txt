@@ -41,12 +41,14 @@ prometheus-client==0.4.2
 prompt-toolkit==2.0.6
 protobuf==3.6.1
 ptyprocess==0.6.0
+pygame==1.9.4.post1
 Pygments==2.2.0
 python-dateutil==2.7.5
 pytz==2018.6
 PyYAML==3.13
 pyzmq==17.1.2
 qtconsole==4.4.2
+RPi.GPIO==0.6.4
 scikit-learn==0.20.0
 scipy==1.1.0
 Send2Trash==1.5.0
