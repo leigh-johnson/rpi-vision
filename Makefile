@@ -1,5 +1,18 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help
+.PHONY: clean clean-test clean-pyc clean-build docs help camera-test
 .DEFAULT_GOAL := help
+
+
+###
+# Consumer targets
+###
+
+camera-test:
+	python -m "detector.camera_test"
+
+
+###
+# Maintainer targets
+###
 
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
