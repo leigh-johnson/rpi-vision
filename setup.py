@@ -32,12 +32,12 @@ setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest', ]
 
-RPI_LIBS = ('python3-dev', '')
-RPI_CUSTOM_COMMANDS = [['apt-get', 'update'],
-                       ['apt-get', 'install', '-y'] + RPI_LIBS
+RPI_LIBS = ('python3-dev', 'cmake')
+RPI_CUSTOM_COMMANDS = [['sudo', 'apt-get', 'update'],
+                       ['sudo', 'apt-get', 'install', '-y'] + RPI_LIBS
                        ]
 
-TRAINER_DEBIAN_LIBS = ('python-numpy python3-dev cmake zlib1g-dev').split()
+TRAINER_DEBIAN_LIBS = ('python3-dev cmake zlib1g-dev').split()
 
 TRAINER_DEBIAN_CUSTOM_COMMANDS = [['apt-get', 'update'],
                                   ['apt-get', 'install', '-y'] + TRAINER_DEBIAN_LIBS]
