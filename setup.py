@@ -21,13 +21,18 @@ setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest', ]
 
-DEBIAN_LIBS = ('python-numpy python3-dev cmake zlib1g-dev').split()
+RPI_LIBS = ('')
+RPI_CUSTOM_COMMANDS = [['apt-get', 'update'],
+                       ['apt-get', 'install', '-y'] + RPI_LIBS
+                       ]
 
-DEBIAN_CUSTOM_COMMANDS = [['apt-get', 'update'],
-                          ['apt-get', 'install', '-y'] + DEBIAN_LIBS]
+TRAINER_DEBIAN_LIBS = ('python-numpy python3-dev cmake zlib1g-dev').split()
 
-DARWIN_LIBS = ()
-DARWIN_CUSTOM_COMMANDS = [[]]
+TRAINER_DEBIAN_CUSTOM_COMMANDS = [['apt-get', 'update'],
+                                  ['apt-get', 'install', '-y'] + TRAINER_DEBIAN_LIBS]
+
+TRAINER_DARWIN_LIBS = ()
+TRAINER_DARWIN_CUSTOM_COMMANDS = [[]]
 
 
 class CustomCommands(Command):
@@ -59,14 +64,18 @@ class CustomCommands(Command):
 
     def run(self):
         system = platform.system()
+        machine = platform.machine()
+        distro = platform.linux_distribution()
 
-        if system == 'Linux':
-            distro = platform.linux_distribution()
+        if 'x86' in machine and system == 'Linux' and 'debian' in distro:
             if 'debian' in distro:
-                for command in DEBIAN_CUSTOM_COMMANDS:
+                for command in TRAINER_DEBIAN_CUSTOM_COMMANDS:
                     self.RunCustomCommand(command)
+        elif 'arm' in machine and system == 'Linux' and 'debian' in distro:
+            for command in TRAINER_DEBIAN_CUSTOM_COMMANDS:
+                self.RunCustomCommand(command)
         elif system == 'Darwin':
-            for command in DARWIN_CUSTOM_COMMANDS:
+            for command in TRAINER_DARWIN_CUSTOM_COMMANDS:
                 self.RunCustomCommand(command)
         else:
             raise NotImplementedError(
