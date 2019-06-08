@@ -15,13 +15,24 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['tensorflow==2.0.0-beta0']
+common_requirements = ['tensorflow==2.0.0-beta0']
+
+trainer_requirements = ['ansible==2.8.1']
+trainer_requirements = list(map(
+    lambda x: x + ';platform_machine=="x86_64"', trainer_requirements
+))
+
+rpi_requirements = ['picamera==1.13.0']
+rpi_requirements = list(map(
+    lambda x: x + ';platform_machine=="armv7l"', rpi_requirements))
+
+requirements = common_requirements + trainer_requirements + rpi_requirements
 
 setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest', ]
 
-RPI_LIBS = ('')
+RPI_LIBS = ('python3-dev', '')
 RPI_CUSTOM_COMMANDS = [['apt-get', 'update'],
                        ['apt-get', 'install', '-y'] + RPI_LIBS
                        ]
@@ -31,8 +42,10 @@ TRAINER_DEBIAN_LIBS = ('python-numpy python3-dev cmake zlib1g-dev').split()
 TRAINER_DEBIAN_CUSTOM_COMMANDS = [['apt-get', 'update'],
                                   ['apt-get', 'install', '-y'] + TRAINER_DEBIAN_LIBS]
 
-TRAINER_DARWIN_LIBS = ()
-TRAINER_DARWIN_CUSTOM_COMMANDS = [[]]
+TRAINER_DARWIN_LIBS = ('cmake')
+TRAINER_DARWIN_CUSTOM_COMMANDS = [['brew', 'update'],
+                                  ['brew', 'install'] + TRAINER_DARWIN_LIBS
+                                  ]
 
 
 class CustomCommands(Command):
@@ -104,8 +117,8 @@ setup(
     long_description=readme + '\n\n' + history,
     include_package_data=True,
     keywords='rpi_vision',
-    name='rpi_vision',
-    packages=find_packages(include=['rpi_vision']),
+    name='rpi-vision',
+    packages=find_packages(include=['detector']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
