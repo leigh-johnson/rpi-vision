@@ -1,0 +1,30 @@
+---
+- name: "Install dependencies and configure Raspberry Pi for use with rpi-vision examples"
+  hosts: "{{ RPI_HOSTNAME  | default('raspberrypi.local')}}"
+  tasks:
+    - name: "Install rpi-vision"
+      git:
+        repo: 'https://github.com/leigh-johnson/rpi-vision'
+        dest: "{{ RPI_VISION_DIR | default('/home/pi/rpi-vision') }}"
+        version: "{{ VERSION | default('release-v1.0.0')}}"
+    - name: "Install rpi-fbcp"
+      git:
+        repo: "https://github.com/tasanakorn/rpi-fbcp.git"
+        dest: "{{ FBCP_DIR | default('/home/pi/rpi-fbcp')}}"
+        version: master
+    - file:
+        path: "{{ FBCP_DIR | default('/home/pi/rpi-fbcp')}}/build"
+        state: directory
+    - name: "Build fbcp (frame buffer copy for Raspberry Pi)"
+      shell: "cmake .. && make"
+      args:
+        creates: fbcp
+        chdir: "{{ FBCP_DIR | default('/home/pi/rpi-fbcp')}}/build"
+    - name: "Copy fbcp to /usr/local/bin"
+      become: True
+      shell: cp fbcp /usr/local/bin && chmod +x /usr/local/bin/fbcp
+      args:
+        creates: /usr/local/bin/fbcp
+        chdir: "{{ FBCP_DIR | default('/home/pi/rpi-fbcp')}}/build"
+
+      
