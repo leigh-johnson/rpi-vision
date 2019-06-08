@@ -9,7 +9,8 @@
 camera-test:
 	python -m "detector.camera_test"
 
-
+rpi-install:
+	ansible-playbook playbooks/bootstrap-rpi.yml --extra-vars "@playbooks/example-vars.json" -i playbooks/example-inventory.ini
 ###
 # Maintainer targets
 ###

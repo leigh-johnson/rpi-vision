@@ -1,17 +1,32 @@
 ---
 - name: "Install dependencies and configure Raspberry Pi for use with rpi-vision examples"
   hosts: "{{ RPI_HOSTNAME  | default('raspberrypi.local')}}"
+  gather_facts: false
+  vars:
+    rpi_vision_dir: "{{ RPI_VISION_DIR | default('/home/pi/rpi-vision') }}"
+    fbcp_dir: "{{ FBCP_DIR | default('/home/pi/rpi-fbcp') }}"
+    tft_driver_dir: "{{TFT_DRIVER_DIR | default('/home/pi/lcd-show')}}"
+    tft_driver_install_script: "{{TFT_DRIVER_INSTALL_SCRIPT | default('LCD35-show')}}"
   tasks:
-    - name: "Install rpi-vision"
+    - name: "Clone rpi-vision"
       git:
         repo: 'https://github.com/leigh-johnson/rpi-vision'
-        dest: "{{ RPI_VISION_DIR | default('/home/pi/rpi-vision') }}"
+        dest: "{{ rpi_vision_dir }}"
         version: "{{ VERSION | default('release-v1.0.0')}}"
-    - name: "Install rpi-fbcp"
+    - name: "Clone rpi-fbcp"
       git:
         repo: "https://github.com/tasanakorn/rpi-fbcp.git"
-        dest: "{{ FBCP_DIR | default('/home/pi/rpi-fbcp')}}"
+        dest: "{{ fbcp_dir }}"
         version: master
+    - name: "Clone TFT drivers"
+      git:
+        repo: "https://github.com/goodtft/LCD-show.git"
+        dest: "{{ tft_driver_dir }}"
+    - name: "Copy TFT driver install script to /usr/local/bin"
+      become: True
+      shell: cp {{ tft_driver_dir }}/{{tft_driver_install_script}} /usr/local/bin/{{tft_driver_install_script}} && chmod +x /usr/local/bin/{{tft_driver_install_script}}
+      args:
+        creates: /usr/local/bin/{{tft_driver_install_script}}
     - file:
         path: "{{ FBCP_DIR | default('/home/pi/rpi-fbcp')}}/build"
         state: directory
@@ -26,5 +41,20 @@
       args:
         creates: /usr/local/bin/fbcp
         chdir: "{{ FBCP_DIR | default('/home/pi/rpi-fbcp')}}/build"
-
-      
+    - name: "Install TFT drivers"
+      become: True
+      command: creates="/home/pi/.tft_screen_installed" /usr/local/bin/{{tft_driver_install_script}}
+      async: 60
+      poll: 0
+      register: tft_install_output
+    - name: "Waiting for TFT driver installation to finish (Pi Rebooting)"
+      wait_for_connection:
+        delay: 30
+        sleep: 5
+        timeout: 300
+      when: tft_install_output is changed
+    - name: "Create .tft_screen_installed"
+      when: tft_install_output is changed
+      copy: 
+        content: "/usr/local/bin/{{tft_driver_install_script}}" 
+        dest: /home/pi/.tft_screen_installed
