@@ -33,9 +33,10 @@
         creates: "/tmp/Python-{{python_version}}/python"
     - name: "install python{{python_version}}"
       become: yes
-      make:
+      shell: "make altinstall"
+      args:
         chdir: "/tmp/Python-{{python_version}}"
-        target: altinstall
+        creates: /usr/local/bin/python3.6
 - name: "Install dependencies and configure Raspberry Pi for use with rpi-vision examples"
   hosts: "{{ RPI_HOSTNAME  | default('raspberrypi.local')}}"
   gather_facts: false
