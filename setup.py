@@ -32,17 +32,17 @@ setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest', ]
 
-RPI_LIBS = ['python3-dev', 'cmake'].split()
+RPI_LIBS = ['python3-dev', 'cmake']
 RPI_CUSTOM_COMMANDS = [['sudo', 'apt-get', 'update'],
                        ['sudo', 'apt-get', 'install', '-y'] + RPI_LIBS
                        ]
 
-TRAINER_DEBIAN_LIBS = ['python3-dev cmake zlib1g-dev'].split()
+TRAINER_DEBIAN_LIBS = ['python3-dev cmake zlib1g-dev']
 
 TRAINER_DEBIAN_CUSTOM_COMMANDS = [['apt-get', 'update'],
                                   ['apt-get', 'install', '-y'] + TRAINER_DEBIAN_LIBS]
 
-TRAINER_DARWIN_LIBS = ['cmake'].split()
+TRAINER_DARWIN_LIBS = ['cmake']
 TRAINER_DARWIN_CUSTOM_COMMANDS = [['brew', 'update'],
                                   ['brew', 'install'] + TRAINER_DARWIN_LIBS
                                   ]
