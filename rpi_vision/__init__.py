@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Top-level package for Computer Vision on Raspberry Pi."""
 
 __author__ = """Leigh Johnson"""
