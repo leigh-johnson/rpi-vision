@@ -8,7 +8,6 @@ DIST_DIR := .dist
 
 TENSORFLOW_DIR = ${TMP_DIR}/tensorflow
 WORKSPACE = $(shell echo $$PWD)
-
 ###
 # Consumer targets
 ###
@@ -16,6 +15,9 @@ WORKSPACE = $(shell echo $$PWD)
 camera-test:
 	python -m "detector.camera_test"
 
+cp-tflite-lib:
+	ansible-playbook playbooks/rpi-tensorflow-lite.yml --extra-vars "@.env/example-vars.json" -i .env/example-inventory.ini
+	
 tflite-lib:
 	TENSORFLOW_VERSION=${TENSORFLOW_VERSION} ./tools/build-tflite-lib
 
