@@ -1,6 +1,13 @@
 .PHONY: clean clean-test clean-pyc clean-build docs help camera-test
 .DEFAULT_GOAL := help
 
+TENSORFLOW_VERSION := v2.0.0-beta0
+DOCKER_TAG := 2.0.0b0-py3
+TMP_DIR := .tmp
+DIST_DIR := .dist
+
+TENSORFLOW_DIR = ${TMP_DIR}/tensorflow
+WORKSPACE = $(shell echo $$PWD)
 
 ###
 # Consumer targets
@@ -9,8 +16,12 @@
 camera-test:
 	python -m "detector.camera_test"
 
+tflite-lib:
+	TENSORFLOW_VERSION=${TENSORFLOW_VERSION} ./tools/build-tflite-lib
+
 rpi-install:
 	ansible-playbook playbooks/bootstrap-rpi.yml --extra-vars "@.env/example-vars.json" -i .env/example-inventory.ini
+
 ###
 # Maintainer targets
 ###
