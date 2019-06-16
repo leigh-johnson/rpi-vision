@@ -2,6 +2,7 @@
 import logging
 # lib
 import tensorflow as tf
+import numpy as np
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
 
