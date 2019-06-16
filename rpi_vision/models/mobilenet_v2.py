@@ -2,11 +2,13 @@
 import logging
 # lib
 import tensorflow as tf
+from tf.keras.applications.mobilenetv2 import MobileNetV2
+from tf.keras.applications.mobilenetv2 import preprocess_input, decode_predictions
 
 logging.basicConfig()
 
 
-class MobileNetV2():
+class MobileNetV2Base():
     def __init__(self,
                  input_shape=None,
                  alpha=1.0,
