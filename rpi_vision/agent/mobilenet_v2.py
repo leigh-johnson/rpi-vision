@@ -1,5 +1,5 @@
 from rpi_vision.agent.capture import PiCameraStream
-from rpi_vision.trainer import MobileNetV2Base
+from rpi_vision.models.mobilenet_v2 import MobileNetV2Base
 
 
 if __name__ == "__main__":
