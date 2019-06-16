@@ -93,7 +93,7 @@ class CustomCommands(Command):
                 self.RunCustomCommand(command)
         else:
             raise NotImplementedError(
-                f'Unsupported Platform: {system}. Supported platforms are Debian-derived Linux and Darwin (OS X)')
+                'Unsupported Platform: {}. Supported platforms are Debian-derived Linux and Darwin (OS X)'.format(system))
 
 
 setup(
