@@ -1,42 +1,42 @@
 ---
-- name: "Install Python 3.6 on Raspberry Pi"
-  hosts: "{{ RPI_HOSTNAME  | default('raspberrypi.local')}}"
-  gather_facts: false
-  vars:
-    python_version: "{{PYTHON_VERSION | default('3.6.5')}}"
-    threads: 4
-  tasks:
-    - name: "python{{python_version}}  runtime&build dependencies"
-      become: yes
-      apt: 
-        name: ['build-essential', 'tk-dev', 'libncurses5-dev', 'libncursesw5-dev', 'libreadline6-dev', 'libdb5.3-dev', 'libgdbm-dev']
-    - name: "Download python{{python_version}}"
-      get_url:
-        url: "https://www.python.org/ftp/python/{{python_version}} /Python-{{python_version}} .tar.xz"
-        dest: "/tmp/Python-{{python_version}}.tar.xz"
-    - name: "Unarchive python{{python_version}}"
-      unarchive:
-        src: "/tmp/Python-{{python_version}}.tar.xz"
-        dest: "/tmp/"
-        copy: no
-        creates: "/tmp/Python-{{python_version}}"
-    - name: "configure python{{python_version}}  build"
-      command: ./configure
-      args:
-        chdir: "/tmp/Python-{{python_version}}"
-        creates: "/tmp/Python-{{python_version}}/Makefile"
-    - name: "build python{{python_version}}"
-      # not using make module to be able to use -j and creates option to fully skip step
-      command: make -j{{threads}}
-      args:
-        chdir: "/tmp/Python-{{python_version}}"
-        creates: "/tmp/Python-{{python_version}}/python"
-    - name: "install python{{python_version}}"
-      become: yes
-      shell: "make altinstall"
-      args:
-        chdir: "/tmp/Python-{{python_version}}"
-        creates: /usr/local/bin/python3.6
+# - name: "Install Python 3.6 on Raspberry Pi"
+#   hosts: "{{ RPI_HOSTNAME  | default('raspberrypi.local')}}"
+#   gather_facts: false
+#   vars:
+#     python_version: "{{PYTHON_VERSION | default('3.6.5')}}"
+#     threads: 4
+#   tasks:
+#     - name: "python{{python_version}}  runtime&build dependencies"
+#       become: yes
+#       apt: 
+#         name: ['build-essential', 'tk-dev', 'libncurses5-dev', 'libncursesw5-dev', 'libreadline6-dev', 'libdb5.3-dev', 'libgdbm-dev']
+#     - name: "Download python{{python_version}}"
+#       get_url:
+#         url: "https://www.python.org/ftp/python/{{python_version}} /Python-{{python_version}} .tar.xz"
+#         dest: "/tmp/Python-{{python_version}}.tar.xz"
+#     - name: "Unarchive python{{python_version}}"
+#       unarchive:
+#         src: "/tmp/Python-{{python_version}}.tar.xz"
+#         dest: "/tmp/"
+#         copy: no
+#         creates: "/tmp/Python-{{python_version}}"
+#     - name: "configure python{{python_version}}  build"
+#       command: ./configure
+#       args:
+#         chdir: "/tmp/Python-{{python_version}}"
+#         creates: "/tmp/Python-{{python_version}}/Makefile"
+#     - name: "build python{{python_version}}"
+#       # not using make module to be able to use -j and creates option to fully skip step
+#       command: make -j{{threads}}
+#       args:
+#         chdir: "/tmp/Python-{{python_version}}"
+#         creates: "/tmp/Python-{{python_version}}/python"
+#     - name: "install python{{python_version}}"
+#       become: yes
+#       shell: "make altinstall"
+#       args:
+#         chdir: "/tmp/Python-{{python_version}}"
+#         creates: /usr/local/bin/python3.6
 - name: "Install dependencies and configure Raspberry Pi for use with rpi-vision examples"
   hosts: "{{ RPI_HOSTNAME  | default('raspberrypi.local')}}"
   gather_facts: false
