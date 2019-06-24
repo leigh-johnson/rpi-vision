@@ -10,7 +10,7 @@
         creates: includes/libtensorflow-lite.a
 
 - name: "Copy Tensorflow Lite Static Library to Raspberry Pi"
-  hosts: "{{ RPI_HOSTNAME  | default('raspberrypi.local')}}"
+  hosts: "rpi_vision"
   gather_facts: false
   tasks:
     - copy:

@@ -38,7 +38,7 @@
 #         chdir: "/tmp/Python-{{python_version}}"
 #         creates: /usr/local/bin/python3.6
 - name: "Install dependencies and configure Raspberry Pi for use with rpi-vision examples"
-  hosts: "{{ RPI_HOSTNAME  | default('raspberrypi.local')}}"
+  hosts: "rpi_vision"
   gather_facts: false
   vars:
     rpi_vision_dir: "{{ RPI_VISION_DIR | default('/home/pi/rpi-vision') }}"
@@ -46,6 +46,10 @@
     tft_driver_dir: "{{TFT_DRIVER_DIR | default('/home/pi/lcd-show')}}"
     tft_driver_install_script: "{{TFT_DRIVER_INSTALL_SCRIPT | default('LCD35-show')}}"
   tasks:
+    - name: "Install platform dependencies"
+      become: yes
+      apt: 
+        name: ['tmux']
     - name: "Clone rpi-vision"
       git:
         repo: 'https://github.com/leigh-johnson/rpi-vision'
