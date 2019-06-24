@@ -1,0 +1,20 @@
+---
+- name: "Build Tensorflow Lite Static Library"
+  hosts: localhost
+  vars:
+    tensorflow_version: "{{TENSORFLOW_VERSION | default('v2.0.0-beta0')}}"
+  gather_facts: false
+  tasks:
+    - shell: make tflite-lib -C ../
+      args:
+        creates: includes/libtensorflow-lite.a
+
+- name: "Copy Tensorflow Lite Static Library to Raspberry Pi"
+  hosts: "rpi_vision"
+  gather_facts: false
+  tasks:
+    - copy:
+        src: ../includes/libtensorflow-lite.a
+        dest: /home/pi/rpi-vision/includes/libtensorflow-lite.a
+
+

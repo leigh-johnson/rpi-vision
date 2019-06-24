@@ -1,8 +1,11 @@
+<<<<<<< HEAD
 trainers/dice/data.tar.gz
 .ipynb_checkpoints/
 data/caps/
 .vscode/
 ### Python template
+=======
+>>>>>>> release-v1.0.0
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -13,6 +16,10 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+<<<<<<< HEAD
+=======
+env/
+>>>>>>> release-v1.0.0
 build/
 develop-eggs/
 dist/
@@ -49,13 +56,29 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+<<<<<<< HEAD
+=======
+.pytest_cache/
+>>>>>>> release-v1.0.0
 
 # Translations
 *.mo
 *.pot
 
 # Django stuff:
+<<<<<<< HEAD
 staticfiles/
+=======
+*.log
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+>>>>>>> release-v1.0.0
 
 # Sphinx documentation
 docs/_build/
@@ -63,17 +86,40 @@ docs/_build/
 # PyBuilder
 target/
 
+<<<<<<< HEAD
+=======
+# Jupyter Notebook
+.ipynb_checkpoints
+
+>>>>>>> release-v1.0.0
 # pyenv
 .python-version
 
 # celery beat schedule file
 celerybeat-schedule
 
+<<<<<<< HEAD
 # Environments
+=======
+# SageMath parsed files
+*.sage.py
+
+# dotenv
+.env
+
+# virtualenv
+>>>>>>> release-v1.0.0
 .venv
 venv/
 ENV/
 
+<<<<<<< HEAD
+=======
+# Spyder project settings
+.spyderproject
+.spyproject
+
+>>>>>>> release-v1.0.0
 # Rope project settings
 .ropeproject
 
@@ -82,6 +128,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+<<<<<<< HEAD
 
 
 ### Node template
@@ -278,3 +325,9 @@ grant_api/media/
 .env
 .envs/*
 #!.envs/.local/
+=======
+ setup.py
+
+# editor
+.vscode/
+>>>>>>> release-v1.0.0

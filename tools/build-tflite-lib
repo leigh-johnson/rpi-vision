@@ -1,0 +1,8 @@
+#!/bin/bash
+docker build -f tools/Dockerfile.tflite \
+    -t tensorflow-lite:${TENSORFLOW_VERSION} \
+    tools/
+CID=$(docker create tensorflow-lite:${TENSORFLOW_VERSION})
+
+# https://www.tensorflow.org/lite/guide/build_rpi
+docker cp ${CID}:/tensorflow/tensorflow/lite/tools/make/gen/rpi_armv7l/lib/libtensorflow-lite.a ${PWD}/includes/libtensorflow-lite.a
