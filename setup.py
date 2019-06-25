@@ -1,93 +1,3 @@
-<<<<<<< HEAD
-from setuptools import find_packages
-from setuptools import setup
-import os
-import trainers
-
-
-REQUIRED_PACKAGES = [
-    "absl-py==0.6.1",
-    "appnope==0.1.0",
-    "astor==0.7.1",
-    "backcall==0.1.0",
-    "bleach==3.0.2",
-    "cachetools==2.1.0",
-    "certifi==2018.10.15",
-    "chardet==3.0.4",
-    "decorator==4.3.0",
-    "defusedxml==0.5.0",
-    "entrypoints==0.2.3",
-    "gast==0.2.0",
-    "google-api-core==1.5.0",
-    "google-auth==1.5.1",
-    "google-cloud-core==0.28.1",
-    "google-cloud-storage==1.13.0",
-    "google-resumable-media==0.3.1",
-    "googleapis-common-protos==1.5.3",
-    "grpcio==1.16.0",
-    "h5py==2.8.0",
-    "idna==2.7",
-    "jedi==0.13.1",
-    "Jinja2==2.10",
-    "jsonschema==2.6.0",
-    "Keras==2.2.4",
-    "Keras-Applications==1.0.6",
-    "Keras-Preprocessing==1.0.5",
-    "Markdown==3.0.1",
-    "MarkupSafe==1.0",
-    "mistune==0.8.4",
-    "nbconvert==5.4.0",
-    "nbformat==4.4.0",
-    "numpy==1.14.5",
-    "pandas==0.23.4",
-    "pandocfilters==1.4.2",
-    "parso==0.3.1",
-    "pexpect==4.6.0",
-    "pickleshare==0.7.5",
-    "Pillow==5.3.0",
-    "prometheus-client==0.4.2",
-    "prompt-toolkit==2.0.6",
-    "protobuf==3.6.1",
-    "ptyprocess==0.6.0",
-    "pyasn1==0.4.4",
-    "pyasn1-modules==0.2.2",
-    "Pygments==2.2.0",
-    "python-dateutil==2.7.5",
-    "pytz==2018.6",
-    "PyYAML==3.13",
-    "pyzmq==17.1.2",
-    "qtconsole==4.4.2",
-    "requests==2.20.0",
-    "rsa==4.0",
-    "scikit-learn==0.20.0",
-    "scipy==1.1.0",
-    "Send2Trash==1.5.0",
-    "six==1.11.0",
-    "sklearn==0.0",
-    "termcolor==1.1.0",
-    "terminado==0.8.1",
-    "testpath==0.4.2",
-    "tornado==5.1.1",
-    "traitlets==4.3.2",
-    "urllib3==1.24",
-    "wcwidth==0.1.7",
-    "webencodings==0.5.1",
-]
-
-try:
-    PACKAGE_NAME
-except NameError:
-    PACKAGE_NAME = "rpivision"
-
-setup(
-    name=PACKAGE_NAME,
-    version=trainers.__version__,
-    install_requires=REQUIRED_PACKAGES,
-    packages=find_packages(),
-    include_package_data=True,
-    description="Training application package for raspberry-pi-vision",
-    package_data={"trainers": ["shapes/data/*.png"]},
-=======
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -108,7 +18,7 @@ with open('HISTORY.rst') as history_file:
 common_requirements = []
 
 # tensorflow 2.0 wheel has not been released for Raspbian yet
-trainer_requirements = ['ansible==2.8.1', 'tensorflow==2.0.0-beta0s']
+trainer_requirements = ['ansible==2.8.1', 'tensorflow==2.0.0-beta0']
 trainer_requirements = list(map(
     lambda x: x + ';platform_machine=="x86_64"', trainer_requirements
 ))
@@ -217,5 +127,4 @@ setup(
     url='https://github.com/leigh-johnson/rpi-vision',
     version='0.1.0',
     zip_safe=False,
->>>>>>> release-v1.0.0
 )

@@ -5,9 +5,12 @@ TENSORFLOW_VERSION := v2.0.0-beta0
 DOCKER_TAG := 2.0.0b0-py3
 TMP_DIR := .tmp
 DIST_DIR := .dist
+ENV_DIR := .env
+INVENTORY_FILENAME
 
 TENSORFLOW_DIR = ${TMP_DIR}/tensorflow
 WORKSPACE = $(shell echo $$PWD)
+
 ###
 # Consumer targets
 ###
