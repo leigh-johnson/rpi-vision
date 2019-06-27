@@ -19,6 +19,7 @@ class MobileNetV2Base():
                  pooling=None,
                  classes=1000,
                  ):
+        self.tflite_interpreter = None
 
         self.input_shape = input_shape
 
@@ -48,6 +49,43 @@ class MobileNetV2Base():
             with open(output_dir + filename, 'wb') as f:
                 f.write(tflite_model)
         return tflite_model
+
+    def init_tflite_interpreter(self, model_path='includes/mobilenet_v2.tflite'):
+        '''
+            https://www.tensorflow.org/versions/r2.0/api_docs/python/tf/lite/Interpreter
+            This makes the TensorFlow Lite interpreter accessible in Python. 
+            It is possible to use this interpreter in a multithreaded Python environment, but you must be sure to call functions of a particular instance from only one thread at a time. 
+            So if you want to have 4 threads running different inferences simultaneously, create an interpreter for each one as thread-local data. 
+            Similarly, if you are calling invoke() in one thread on a single interpreter but you want to use tensor() on another thread once it is done
+            you must use a synchronization primitive between the threads to ensure invoke has returned before calling tensor().
+
+        '''
+        self.tflite_interpreter = tf.lite.Interpreter(
+            model_path="converted_model.tflite")
+        self.tflite_interpreter.allocate_tensors()
+        logging.info('Initialized tflite Python interpreter \n',
+                     self.tflite_interpreter)
+
+        self.tflite_input_details = self.tflite_interpreter.get_input_details()
+        logging.info('tflite input details \n', self.tflite_input_details)
+
+        self.tflite_output_details = self.tflite_interpreter.get_output_details()
+        logging.info('tflite output details \n',
+                     self.tflite_output_details)
+
+        return self.tflite_interpreter
+
+    def tflite_predict(self, input_data, input_shape=None):
+        if not self.tflite_interpreter:
+            self.init_tflite_interpreter()
+
+        self.tflite_interpreter.set_tensor(
+            self.tflite_input_details[0]['index'], input_data)
+        self.tflite_interpreter.invoke()
+
+        output_data = self.tflite_interpreter.get_tensor(
+            self.tflite_output_details[0]['index'])
+        return output_data
 
 
 if __name__ == '__main__':

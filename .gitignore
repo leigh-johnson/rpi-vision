@@ -81,7 +81,9 @@ celerybeat-schedule
 *.sage.py
 
 # dotenv
-.env
+.env/*
+!.env/example-inventory.ini
+!.env/example-vars.json
 
 # virtualenv
 .venv
