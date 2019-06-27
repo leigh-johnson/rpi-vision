@@ -15,7 +15,7 @@ def parse_args():
                         dest='include_top', default=True,
                         help='Include fully-connected layer at the top of the network.')
 
-    parser.add_argument('--tflite', type=bool,
+    parser.add_argument('--tflite',
                         dest='tflite', action='store_true', default=False,
                         help='Convert base model to TFLite FlatBuffer, then load model into TFLite Python Interpreter')
     args = parser.parse_args()
@@ -23,8 +23,7 @@ def parse_args():
 
 
 def main(args):
-    args_dict = args.to_dict()
-    model = MobileNetV2Base(**args_dict)
+    model = MobileNetV2Base(include_top=args.include_top)
     capture_manager = PiCameraStream()
     capture_manager.start()
 
