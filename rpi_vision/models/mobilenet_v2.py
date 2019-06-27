@@ -42,11 +42,11 @@ class MobileNetV2Base():
         decoded_features = decode_predictions(features)
         return decoded_features
 
-    def tflite_convert(self, output_dir='includes/', output_filename='mobilenet_v2.tflite', from_keras_model_file='includes/mobilenet_v2.h5'):
+    def tflite_convert(self, output_dir='includes/', output_filename='mobilenet_v2_imagenet.tflite', keras_model_file='includes/mobilenet_v2_imagenet.h5'):
         # @todo TFLiteConverter.from_keras_model() is only available in the tf-nightly-2.0-preview build right now
         # https://groups.google.com/a/tensorflow.org/forum/#!searchin/developers/from_keras_model%7Csort:date/developers/Mx_EaHM1X2c/rx8Tm-24DQAJ
         # converter = tf.lite.TFLiteConverter.from_keras_model(self.model_base)
-        converter = tf.lite.TFLiteConverter.from_keras_model_file(self.model_base)
+        converter = tf.lite.TFLiteConverter.from_keras_model_file(keras_model_file)
         tflite_model = converter.convert()
         if output_dir and filename:
             with open(output_dir + output_filename, 'wb') as f:
@@ -54,7 +54,7 @@ class MobileNetV2Base():
                 logger.info('Wrote {}'.format(output_dir + filename))
         return tflite_model
 
-    def init_tflite_interpreter(self, model_path='includes/mobilenet_v2.tflite'):
+    def init_tflite_interpreter(self, model_path='includes/mobilenet_v2_imagenet.tflite'):
         '''
             https://www.tensorflow.org/versions/r2.0/api_docs/python/tf/lite/Interpreter
             This makes the TensorFlow Lite interpreter accessible in Python. 
