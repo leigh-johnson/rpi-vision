@@ -23,10 +23,12 @@ trainer_requirements = list(map(
     lambda x: x + ';platform_machine=="x86_64"', trainer_requirements
 ))
 
-rpi_requirements = ['picamera==1.13.0',
-                    'tensorflow @ https://github.com/leigh-johnson/tensorflow-community-wheels/blob/master/tensorflow-2.0.0b0-cp35-none-linux_armv7l.whl']
+rpi_requirements = ['picamera==1.13.0']
 rpi_requirements = list(map(
     lambda x: x + ';platform_machine=="armv7l"', rpi_requirements))
+
+if 'arm' in platform.machine():
+    rpi_requirements.append('tensorflow@https://github.com/leigh-johnson/tensorflow-community-wheels/raw/master/tensorflow-2.0.0b0-cp35-none-linux_armv7l.whl')
 
 requirements = common_requirements + trainer_requirements + rpi_requirements
 
@@ -120,7 +122,7 @@ setup(
     include_package_data=True,
     keywords='rpi_vision',
     name='rpi-vision',
-    packages=find_packages(include=['detector']),
+    packages=find_packages(include=['rpi_vision']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
