@@ -42,16 +42,28 @@ class MobileNetV2Base():
         decoded_features = decode_predictions(features)
         return decoded_features
 
-    def tflite_convert(self, output_dir='includes/', output_filename='mobilenet_v2_imagenet.tflite', keras_model_file='includes/mobilenet_v2_imagenet.h5'):
+    def tflite_convert_from_keras_model_file(self, output_dir='includes/', output_filename='mobilenet_v2_imagenet.tflite', keras_model_file='includes/mobilenet_v2_imagenet.h5'):
         # @todo TFLiteConverter.from_keras_model() is only available in the tf-nightly-2.0-preview build right now
         # https://groups.google.com/a/tensorflow.org/forum/#!searchin/developers/from_keras_model%7Csort:date/developers/Mx_EaHM1X2c/rx8Tm-24DQAJ
         # converter = tf.lite.TFLiteConverter.from_keras_model(self.model_base)
         converter = tf.lite.TFLiteConverter.from_keras_model_file(keras_model_file)
         tflite_model = converter.convert()
-        if output_dir and filename:
+        if output_dir and output_filename:
             with open(output_dir + output_filename, 'wb') as f:
                 f.write(tflite_model)
-                logger.info('Wrote {}'.format(output_dir + filename))
+                logging.info('Wrote {}'.format(output_dir + output_filename))
+        return tflite_model
+
+    def tflite_convert_from_keras_model(self, output_dir='includes/', output_filename='mobilenet_v2_imagenet.tflite'):
+        # @todo TFLiteConverter.from_keras_model() is only available in the tf-nightly-2.0-preview build right now
+        # https://groups.google.com/a/tensorflow.org/forum/#!searchin/developers/from_keras_model%7Csort:date/developers/Mx_EaHM1X2c/rx8Tm-24DQAJ
+        # converter = tf.lite.TFLiteConverter.from_keras_model(self.model_base)
+        converter = tf.lite.TFLiteConverter.from_keras_model(self.model_base)
+        tflite_model = converter.convert()
+        if output_dir and output_filename:
+            with open(output_dir + output_filename, 'wb') as f:
+                f.write(tflite_model)
+                logging.info('Wrote {}'.format(output_dir + output_filename))
         return tflite_model
 
     def init_tflite_interpreter(self, model_path='includes/mobilenet_v2_imagenet.tflite'):
@@ -94,5 +106,5 @@ class MobileNetV2Base():
 
 
 if __name__ == '__main__':
-    mobilenetv2 = MobileNetV2()
-    mobilenetv2.tflite_convert()
+    mobilenetv2 = MobileNetV2Base()
+    mobilenetv2.tflite_convert_from_keras_model()
