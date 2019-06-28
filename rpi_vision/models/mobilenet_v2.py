@@ -6,7 +6,7 @@ import numpy as np
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
 
-logging.basicConfig()
+logger = logging.getLogger(__name__)
 
 
 class MobileNetV2Base():
@@ -32,7 +32,7 @@ class MobileNetV2Base():
             pooling=pooling,
             weights=weights,
         )
-        logging.info(self.model_base.summary())
+        logger.info(self.model_base.summary())
 
     def predict(self, frame):
         # expand 3D RGB frame into 4D batch
@@ -51,7 +51,7 @@ class MobileNetV2Base():
         if output_dir and output_filename:
             with open(output_dir + output_filename, 'wb') as f:
                 f.write(tflite_model)
-                logging.info('Wrote {}'.format(output_dir + output_filename))
+                logger.info('Wrote {}'.format(output_dir + output_filename))
         return tflite_model
 
     def tflite_convert_from_keras_model(self, output_dir='includes/', output_filename='mobilenet_v2_imagenet.tflite'):
@@ -63,7 +63,7 @@ class MobileNetV2Base():
         if output_dir and output_filename:
             with open(output_dir + output_filename, 'wb') as f:
                 f.write(tflite_model)
-                logging.info('Wrote {}'.format(output_dir + output_filename))
+                logger.info('Wrote {}'.format(output_dir + output_filename))
         return tflite_model
 
     def init_tflite_interpreter(self, model_path='includes/mobilenet_v2_imagenet.tflite'):
@@ -79,30 +79,36 @@ class MobileNetV2Base():
         self.tflite_interpreter = tf.lite.Interpreter(
             model_path=model_path)
         self.tflite_interpreter.allocate_tensors()
-        logging.info('Initialized tflite Python interpreter \n',
+        logger.info('Initialized tflite Python interpreter \n',
                      self.tflite_interpreter)
 
         self.tflite_input_details = self.tflite_interpreter.get_input_details()
-        logging.info('tflite input details \n', self.tflite_input_details)
+        logger.info('tflite input details \n', self.tflite_input_details)
 
         self.tflite_output_details = self.tflite_interpreter.get_output_details()
-        logging.info('tflite output details \n',
+        logger.info('tflite output details \n',
                      self.tflite_output_details)
 
         return self.tflite_interpreter
 
-    def tflite_predict(self, input_data, input_shape=None):
+    def tflite_predict(self, frame, input_shape=None):
         if not self.tflite_interpreter:
-            self.tflite_convert()
             self.init_tflite_interpreter()
 
-        self.tflite_interpreter.set_tensor(
-            self.tflite_input_details[0]['index'], input_data)
+        dtype = self.tflite_input_details[0].get('dtype')
+
+        # expand 3D RGB frame into 4D batch (of 1 item)
+        sample = np.expand_dims(frame, axis=0)
+        processed_sample = preprocess_input(sample.astype(dtype))
+
+        self.tflite_interpreter.set_tensor(self.tflite_input_details[0]['index'], processed_sample)
         self.tflite_interpreter.invoke()
 
-        output_data = self.tflite_interpreter.get_tensor(
+        features = self.tflite_interpreter.get_tensor(
             self.tflite_output_details[0]['index'])
-        return output_data
+        decoded_features = decode_predictions(features)
+
+        return decoded_features
 
 
 if __name__ == '__main__':
