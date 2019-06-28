@@ -28,7 +28,7 @@ rpi_requirements = list(map(
     lambda x: x + ';platform_machine=="armv7l"', rpi_requirements))
 
 if 'arm' in platform.machine():
-    rpi_requirements.append('tensorflow@https://github.com/leigh-johnson/tensorflow-community-wheels/raw/master/tensorflow-2.0.0b0-cp35-none-linux_armv7l.whl')
+    rpi_requirements.append('tensorflow@https://github.com/PINTO0309/Tensorflow-bin/raw/master/tensorflow-2.0.0b1-cp35-cp35m-linux_armv7l.whl')
 
 requirements = common_requirements + trainer_requirements + rpi_requirements
 
