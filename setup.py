@@ -23,7 +23,7 @@ trainer_requirements = list(map(
     lambda x: x + ';platform_machine=="x86_64"', trainer_requirements
 ))
 
-rpi_requirements = ['picamera==1.13.0']
+rpi_requirements = ['picamera==1.13.0', 'Pillow==6.0.0']
 rpi_requirements = list(map(
     lambda x: x + ';platform_machine=="armv7l"', rpi_requirements))
 
