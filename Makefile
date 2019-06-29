@@ -6,7 +6,7 @@ DOCKER_TAG := 2.0.0b0-py3
 TMP_DIR := .tmp
 DIST_DIR := .dist
 ENV_DIR := .env
-INVENTORY_FILENAME
+MODEL := mobilenet_v2
 
 TENSORFLOW_DIR = ${TMP_DIR}/tensorflow
 WORKSPACE = $(shell echo $$PWD)
@@ -14,6 +14,15 @@ WORKSPACE = $(shell echo $$PWD)
 ###
 # Consumer targets
 ###
+
+usb-accel-install:
+	ansible-playbook playbooks/install-usb-accel.yml --extra-vars "@.env/example-vars.json" -i .env/example-inventory.ini
+
+usb-accel-demo:
+	echo "Running Edge TPU Demo from https://coral.withgoogle.com/docs/accelerator/get-started/#run-a-model-on-the-edge-tpu"
+	ansible-playbook playbooks/demo-usb-accel.yml --extra-vars "@.env/example-vars.json" -i .env/example-inventory.ini
+tflite:
+	python -m "models.mobilenet_v2.py"
 
 camera-test:
 	python -m "detector.camera_test"

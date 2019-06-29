@@ -1,0 +1,28 @@
+- name: "Demo Coral USB Accelerator on Raspberry Pi"
+  hosts: "rpi_vision"
+  gather_facts: false
+  vars:
+    rpi_vision_dir: "{{ RPI_VISION_DIR | default('/home/pi/rpi-vision') }}"
+  tasks:
+    - name: Create ~/.tmp
+      file: path=~/.tmp state=directory
+    - name: "Download example model"
+      get_url:
+        url:  https://dl.google.com/coral/canned_models/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite
+        dest: ~/.tmp/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite
+    - name: "Download example labels"
+      get_url:
+        url:  https://dl.google.com/coral/canned_models/inat_bird_labels.txt 
+        dest: ~/.tmp/inat_bird_labels.txt
+    - name: "Download example input image"
+      get_url:
+        url:  https://coral.withgoogle.com/static/docs/images/parrot.jpg
+        dest: ~/.tmp/parrot.jpg
+    - name: "Run demo"
+      shell: "{{rpi_vision_dir}}/.venv/bin/python \
+        {{rpi_vision_dir}}//.venv/lib/python3.5/site-packages/edgetpu/demo/classify_image.py \
+        --model ~/.tmp/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite \
+        --label ~/.tmp/inat_bird_labels.txt \
+        --image ~/.tmp/parrot.jpg"
+      register: demo_prediction
+    - debug: msg="{{demo_prediction.stdout_lines}}"
