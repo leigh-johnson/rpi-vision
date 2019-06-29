@@ -14,7 +14,7 @@
         remote_src: True
         src: ~/edgetpu_api.tar.gz
     - name: "Install Edge TPU API"
-      shell: . {{rpi_vision_dir}}/.venv/bin/activate && yes no | /bin/bash install.sh
-      args:
-        chdir: ~/edgetpu_api/
+      shell: . {{rpi_vision_dir}}/.venv/bin/activate && yes no | \
+        SCRIPT_DIR=/home/pi/edgetpu_api \
+        /bin/bash /home/pi/rpi-vision/tools/edgetpu_api_install.sh
         
