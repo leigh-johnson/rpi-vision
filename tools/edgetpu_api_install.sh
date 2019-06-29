@@ -139,6 +139,6 @@ info "Done."
 WHEEL=$(ls ${SCRIPT_DIR}/edgetpu-*-py3-none-any.whl 2>/dev/null)
 if [[ $? == 0 ]]; then
   info "Installing Edge TPU Python API..."
-  python3 -m pip install --no-deps "${WHEEL}"
+  python3 -m pip install "${WHEEL}"
   info "Done."
 fi
