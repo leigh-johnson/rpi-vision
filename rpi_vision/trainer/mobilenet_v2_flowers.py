@@ -1,5 +1,6 @@
 # Python
 import logging
+import argparse
 # Lib
 import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2
@@ -12,9 +13,49 @@ logger = logging.getLogger(__name__)
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 BATCH_SIZE = 32
 INPUT_SHAPE = (192, 192, 3)
-EPOCHS = 20
+EPOCHS = 5000
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--epochs',
+        type=int,
+        default=EPOCHS,
+        help='Number of iterations (training rounds) to run'
+    )
+    parser.add_argument(
+        '--batch-size',
+        type=int,
+        default=BATCH_SIZE
+    )
+    parser.add_argument(
+        '--restore',
+        action='store_true',
+        default=False,
+        help='Restore from latest checkpoint in --job-dir'
+    )
+    parser.add_argument(
+        '--save-checkpoint-steps',
+        type=int,
+        default=10,
+        help='Maximum number of checkpoint steps to keep'
+    )
+    parser.add_argument(
+        '--job-dir',
+        default='./checkpoints',
+        help='Directory where Tensorflow checkpoints will be written'
+    )
+    return parser.parse_args()
+
 
 if __name__ == '__main__':
+
+    args = parse_args()
+
+    if args.restore:
+        raise NotImplementedError
+
     model_base = MobileNetV2(
         include_top=False,
         input_shape=INPUT_SHAPE
@@ -43,4 +84,12 @@ if __name__ == '__main__':
 
     logger.info(model.summary())
 
-    model.fit(ds, epochs=EPOCHS, steps_per_epoch=steps_per_epoch)
+    callbacks = [
+        tf.keras.callbacks.ModelCheckpoint(
+            args.job_dir + '/flowers/weights.{epoch:02d}.hdf5', monitor='val_loss',
+            save_best_only=False, save_weights_only=False, mode='auto', save_freq=100)
+    ]
+
+    model.fit(ds, epochs=EPOCHS, steps_per_epoch=steps_per_epoch,
+              callbacks=callbacks
+              )
