@@ -11,9 +11,10 @@ from rpi_vision.dataset.flowers import FlowerDataset
 logger = logging.getLogger(__name__)
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
-BATCH_SIZE = 32
+BATCH_SIZE = 24
 INPUT_SHAPE = (192, 192, 3)
-EPOCHS = 5000
+EPOCHS = 50
+LOG_DIR = 'job-output/flowers'
 
 
 def parse_args():
@@ -85,8 +86,12 @@ if __name__ == '__main__':
     logger.info(model.summary())
 
     callbacks = [
+        tf.keras.callbacks.TensorBoard(
+            log_dir=LOG_DIR, write_images=True, write_graph=False,
+            histogram_freq=1,
+        ),
         tf.keras.callbacks.ModelCheckpoint(
-            args.job_dir + '/flowers/weights.{epoch:02d}.hdf5', monitor='val_loss',
+            LOG_DIR + '/weights.{epoch:02d}.hdf5', monitor='val_loss',
             save_best_only=False, save_weights_only=False, mode='auto', save_freq=100)
     ]
 
