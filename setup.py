@@ -18,17 +18,26 @@ with open('HISTORY.rst') as history_file:
 common_requirements = []
 
 # tensorflow 2.0 wheel has not been released for Raspbian yet
-trainer_requirements = ['ansible==2.8.1', 'tensorflow==2.0.0-beta0']
+trainer_requirements = [
+    'ansible==2.8.1',
+    'tensorflow==2.0.0-beta0',
+    'tensorflow-datasets==1.0.2',
+    'tensorflow-hub==0.5.0'
+]
 trainer_requirements = list(map(
     lambda x: x + ';platform_machine=="x86_64"', trainer_requirements
 ))
 
-rpi_requirements = ['picamera==1.13.0', 'Pillow==6.0.0']
+rpi_requirements = [
+    'picamera==1.13.0',
+    'Pillow==6.0.0'
+]
 rpi_requirements = list(map(
     lambda x: x + ';platform_machine=="armv7l"', rpi_requirements))
 
 if 'arm' in platform.machine():
-    rpi_requirements.append('tensorflow@https://github.com/PINTO0309/Tensorflow-bin/raw/master/tensorflow-2.0.0b1-cp35-cp35m-linux_armv7l.whl')
+    rpi_requirements.append(
+        'tensorflow@https://github.com/PINTO0309/Tensorflow-bin/raw/master/tensorflow-2.0.0b1-cp35-cp35m-linux_armv7l.whl')
 
 requirements = common_requirements + trainer_requirements + rpi_requirements
 
