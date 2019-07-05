@@ -6,6 +6,8 @@ from time import time
 import tensorflow_hub as hub
 import tensorflow as tf
 import numpy as np
+import PIL.Image as Image
+
 # app
 
 
@@ -28,14 +30,30 @@ class TFHubModelLayer(object):
 
         self.model = hub.KerasLayer(
             model_url, input_shape=input_shape, trainable=trainable)
+        self.classifier = tf.keras.Sequential([self.model])
 
         labels_filename = labels_url.split(
             '/')[-1]
         labels_path = tf.keras.utils.get_file(labels_filename, labels_url)
         self.labels = np.array(open(labels_path).read().splitlines())
 
-    def predict(self):
-        pass
+    def predict(self, top_k=5, image_url='https://i.ibb.co/89YXhK1/Nine-banded-Armadillo.jpg', image_filename='armadillo.jpg'):
+
+        image_data = tf.keras.utils.get_file(image_filename, image_url)
+        image_data = Image.open(image_data).resize(self.input_shape[:2])
+        image_data = np.array(image_data)/255.0
+        image_data = np.expand_dims(image_data, axis=0)
+        result = self.classifier.predict(image_data)
+
+        labels_idxs = np.argsort(result[0])[-top_k:]
+        labels_idxs = np.flip(labels_idxs)
+        predictions = [
+            {'label': self.labels[i],
+             'prediction': result[0][i],
+             'label_idx': i
+             }
+            for i in labels_idxs]
+        return predictions
 
 
 class TFHubTrainer(object):
@@ -133,5 +151,7 @@ class TFHubTrainer(object):
 
 
 if __name__ == '__main__':
-    model = TFHubTrainer()
-    model.train()
+    # model = TFHubTrainer()
+    # model.train()
+    model = TFHubModelLayer()
+    model.predict()
