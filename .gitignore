@@ -106,3 +106,5 @@ ENV/
 
 # editor
 .vscode/
+
+.DS_STORE
