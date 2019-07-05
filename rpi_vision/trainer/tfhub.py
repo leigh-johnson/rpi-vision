@@ -72,8 +72,9 @@ class TFHubTrainer(object):
     }
 
     default_tensorboard_kwargs = {
-        'tensorboard_write_images': True,
-        'tensorboard_write_graph': True
+        'write_images': True,
+        'write_graph': True,
+        'histogram_freq': 1,
     }
 
     def __init__(
@@ -82,6 +83,7 @@ class TFHubTrainer(object):
         image_shape=(224, 224, 3),
         model_url='https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4',
         epochs=50,
+        batch_size=24,
         log_dir='job-output/flowers-{}'.format(time()),
         early_stopping_kwargs=default_early_stopping_kwargs,
         tensorboard_kwargs=default_tensorboard_kwargs,
@@ -89,6 +91,7 @@ class TFHubTrainer(object):
 
 
     ):
+        self.batch_size = batch_size
         self.epochs = epochs
         self.log_dir = log_dir
         self.early_stopping_kwargs = {
@@ -109,7 +112,9 @@ class TFHubTrainer(object):
         self.image_generator = tf.keras.preprocessing.image.ImageDataGenerator(
             rescale=1/255)
         self.image_data = self.image_generator.flow_from_directory(
-            str(self.data_root), target_size=image_shape[:2])
+            str(self.data_root), target_size=image_shape[:2],
+            batch_size=self.batch_size
+        )
 
         self.base = TFHubModelLayer(
             model_url=model_url,
@@ -125,7 +130,7 @@ class TFHubTrainer(object):
 
         logging.info(self.model.summary())
 
-    def train(self):
+    def fit(self):
         self.model.compile(
             optimizer=tf.keras.optimizers.Adam(),
             loss='categorical_crossentropy',
@@ -139,8 +144,7 @@ class TFHubTrainer(object):
                 self.log_dir + '/weights.{epoch:02d}.hdf5', **self.model_checkpoint_kwargs),
 
             tf.keras.callbacks.TensorBoard(
-                log_dir=self.log_dir, write_images=self.tenosrboard_write_images, write_graph=self.ftensorboard_write_graph,
-                histogram_freq=1,
+                log_dir=self.log_dir, **self.tensorboard_kwargs
             ),
             tf.keras.callbacks.EarlyStopping(self.early_stopping_kwargs)
         ]
