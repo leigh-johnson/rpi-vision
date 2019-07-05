@@ -113,7 +113,7 @@ class MobileNetV2Base():
 
         return decoded_features
 
-    def init_training_model(self):
+    def init_training_model(self, train_dir='data/'):
 
         if self.include_top is True:
             raise ValueError(
@@ -132,8 +132,6 @@ class MobileNetV2Base():
         model.add(tf.keras.layers.Dense(512, activation='relu'))
         model.add(tf.keras.layers.Dense(256, activation='relu'))
         model.add(tf.keras.layers.Dense(1, activation='softmax'))
-
-        logger.info('Retrain model summary \n', model.summary())
 
 
 if __name__ == '__main__':
