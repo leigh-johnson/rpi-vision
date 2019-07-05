@@ -1,6 +1,8 @@
 .PHONY: clean clean-test clean-pyc clean-build docs help camera-test
 .DEFAULT_GOAL := help
 
+PYTHON_VERSION := 3.5
+
 TENSORFLOW_VERSION := v2.0.0-beta0
 DOCKER_TAG := 2.0.0b0-py3
 TMP_DIR := .tmp
@@ -8,7 +10,12 @@ DIST_DIR := .dist
 ENV_DIR := .env
 MODEL := mobilenet_v2
 
-TENSORFLOW_DIR = ${TMP_DIR}/tensorflow
+REGION=us-central1
+NOW=$(shell date +"%Y%m%d_%H%M%S")
+GCS_BUCKET=gs://data-literate/public-datasets/flower-images
+OUTPUT_DIR=${GCS_BUCKET}/flowers-${NOW}
+SCALE_TIER=basic
+
 WORKSPACE = $(shell echo $$PWD)
 
 ###
