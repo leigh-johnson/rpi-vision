@@ -21,7 +21,8 @@ common_requirements = []
 trainer_requirements = [
     'ansible==2.8.1',
     'tensorflow==2.0.0-beta0',
-    'tensorflow-datasets==1.0.2'
+    'tensorflow-datasets==1.0.2',
+    'tensorflow-hub==0.5.0'
 ]
 trainer_requirements = list(map(
     lambda x: x + ';platform_machine=="x86_64"', trainer_requirements
