@@ -6,7 +6,7 @@ import tensorflow as tf
 import pathlib
 import random
 import os
-
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 
@@ -56,7 +56,7 @@ class FlowerDataset(object):
     def preprocess_image(self, image):
         image = tf.image.decode_jpeg(image, channels=self.image_channels)
         image = tf.image.resize(image, self.image_size)
-        image /= 255.0  # normalize to [0,1] range
-        image = 2*image-1  # normalize to [-1, 1] range
-
+        # image /= 255.0  # normalize to [0,1] range
+        # image = 2*image-1  # normalize to [-1, 1] range
+        image = preprocess_input(image)
         return image
