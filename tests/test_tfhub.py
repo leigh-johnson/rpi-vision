@@ -3,14 +3,15 @@
 from unittest import TestCase
 from unittest import mock
 import pytest
-from rpi_vision.trainer.tfhub import TFHubModelLayer, TFHubTrainer
+from rpi_vision.models.tfhub import TFHubModelLayer
+from rpi_vision.trainer.tfhub import TFHubTrainer
 
 
 class TestTFHubTrainer(TestCase):
 
     @mock.patch('tensorflow.keras.preprocessing.image.ImageDataGenerator')
     @mock.patch('tensorflow.keras.Sequential')
-    @mock.patch('rpi_vision.trainer.tfhub.TFHubModelLayer')
+    @mock.patch('rpi_vision.models.tfhub.TFHubModelLayer')
     def test_defaults(self, *mocks):
         trainer = TFHubTrainer()
         self.assertEqual(trainer.default_early_stopping_kwargs,

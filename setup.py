@@ -15,14 +15,13 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-common_requirements = []
+common_requirements = ['tensorflow-hub==0.5.0']
 
 # tensorflow 2.0 wheel has not been released for Raspbian yet
 trainer_requirements = [
     'ansible==2.8.1',
     'tensorflow==2.0.0-beta0',
     'tensorflow-datasets==1.0.2',
-    'tensorflow-hub==0.5.0'
 ]
 trainer_requirements = list(map(
     lambda x: x + ';platform_machine=="x86_64"', trainer_requirements
