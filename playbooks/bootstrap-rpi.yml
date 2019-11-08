@@ -49,7 +49,7 @@
     - name: "Install platform dependencies"
       become: yes
       apt: 
-        name: ['tmux']
+        name: ['tmux', 'cmake', 'virtualenv']
     - name: "Clone rpi-vision"
       git:
         repo: 'https://github.com/leigh-johnson/rpi-vision'
@@ -103,7 +103,7 @@
         content: "/usr/local/bin/{{tft_driver_install_script}}" 
         dest: /home/pi/.tft_screen_installed
     - name: Create virtual environment
-      shell: virtualenv -p $(which python3.6) .venv
+      shell: virtualenv -p $(which python3) .venv
       args:
         creates: "{{rpi_vision_dir}}/.venv"
         chdir: "{{rpi_vision_dir}}"
