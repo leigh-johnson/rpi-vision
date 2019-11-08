@@ -3,8 +3,9 @@
 
 '''The setup script.'''
 
-import subprocess
+import os
 import platform
+import subprocess
 from setuptools import setup, find_packages, Command
 from distutils.command.build import build as _build
 
@@ -15,15 +16,12 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-common_requirements = [
-    'tensorflow==2.0.0'
-]
-
-# tensorflow 2.0 wheel has not been released for Raspbian yet
+common_requirements = []
 trainer_requirements = [
     'ansible==2.8.1',
     'tensorflow-datasets>=1.3.0',
-    'tensorflow-hub>=0.7.0'
+    'tensorflow-hub>=0.7.0',
+    'tensorflow==2.0.0'
 ]
 trainer_requirements = list(map(
     lambda x: x + ';platform_machine=="x86_64"', trainer_requirements
@@ -31,7 +29,7 @@ trainer_requirements = list(map(
 
 rpi_requirements = [
     'picamera>=1.13.0',
-    'Pillow>=6.0.0'
+    'Pillow>=6.0.0',
 ]
 rpi_requirements = list(map(
     lambda x: x + ';platform_machine=="armv7l"', rpi_requirements))
@@ -135,4 +133,8 @@ setup(
     url='https://github.com/leigh-johnson/rpi-vision',
     version='0.1.0',
     zip_safe=False,
+    dependency_links=[
+    # location to your egg file
+    os.path.join(os.getcwd(), 'includes', 'tensorflow-2.0.0-cp37-cp37m-linux_armv7l.whl')
+    ]
 )
